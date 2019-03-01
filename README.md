@@ -1,2 +1,3 @@
-# Lykke.Bil2.Ripple.TransactionsExecutor
-Ripple Bil2 integration
+# Ripple integration transaction executor
+
+This component of blockchain integration is intended for building and executing transactions.

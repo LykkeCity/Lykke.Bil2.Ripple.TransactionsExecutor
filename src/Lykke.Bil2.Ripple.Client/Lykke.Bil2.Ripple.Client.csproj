@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="4.6.90" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="4.6.90" />
+  </ItemGroup>
+
+</Project>

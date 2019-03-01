@@ -1,0 +1,38 @@
+# Common settings
+
+MonitoringServiceClient:
+    MonitoringServiceUrl:
+        settings-key: MonitoringServiceUrl
+
+SlackNotifications:
+    AzureQueue:
+        ConnectionString:
+            settings-key: SlackNotificationsConnString
+            types:
+                - AzureTableStorage
+        QueueName:
+            settings-key: SlackQueueName
+
+# Transaction executor settings
+
+HealthMonitoringPeriod:
+    settings-key: Ripple-TransactionsExecutor-HealthMonitoringPeriod
+Db:
+    AzureDataConnString:
+        settings-key: Ripple-AzureDataConnString
+        types:
+            - AzureTableStorage
+    LogsConnString:
+        settings-key: Ripple-LogsConnString
+        types:
+            - AzureTableStorage
+NodeUrl:
+    settings-key: Ripple-NodeUrl
+NodeRpcUser:
+    settings-key: Ripple-NodeRpcUser
+    types:
+        - Optional
+NodeRpcPassword:
+    settings-key: Ripple-NodeRpcPassword
+    types:
+        - Optional
