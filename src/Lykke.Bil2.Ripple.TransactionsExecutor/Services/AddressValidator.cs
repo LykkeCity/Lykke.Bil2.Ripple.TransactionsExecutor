@@ -3,54 +3,68 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Bil2.Contract.Common;
+using Lykke.Bil2.Contract.Common.Exceptions;
 using Lykke.Bil2.Contract.TransactionsExecutor;
 using Lykke.Bil2.Contract.TransactionsExecutor.Responses;
+using Lykke.Bil2.Ripple.Client;
+using Lykke.Bil2.Ripple.Client.Api.AccountInfo;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
+using Ripple.Address;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {
     public class AddressValidator : IAddressValidator
     {
-        public AddressValidator(/* TODO: Provide specific settings and dependencies, if necessary */)
+        private readonly IRippleApi _rippleApi;
+
+        public AddressValidator(IRippleApi rippleApi)
         {
+            _rippleApi = rippleApi;
         }
 
-        public async Task<AddressValidityResponse> ValidateAsync(string address, AddressTagType? tagType = null, string tag = null)
+        public async Task<AddressValidityResponse> ValidateAsync(
+            string address,
+            AddressTagType? tagType = null,
+            string tag = null)
         {
-            // TODO: validate address and, optionally, tag type and tag
-            //
-            // Throw
-            // - Lykke.Bil2.Contract.Common.RequestValidationException:
-            //     if input parameters are invalid and result can't be mapped to
-            //     any of Lykke.Bil2.Contract.TransactionsExecutor.AddressValidationResult value.
-            //
-            // - System.Exception:
-            //     if there are any other errors.
-            //     Likely a temporary issue with infrastructure or configuration,
-            //     request should be repeated later.
-            //
-            // For example, for shared deposit wallet and numeric tag approach (used in Ripple f.e.) validation may look like:
-            //
-            // if (tag == null)
-            // {
-            //     if (CheckIfTagIsRequiredForAddress(address))
-            //     {
-            //         return new AddressValidityResponse(AddressValidationResult.RequiredTagMissed);
-            //     }
-            // }
-            // else if (tagType == AddressTagType.Number && !long.TryParse(tag, out var _))
-            // {
-            //     return new AddressValidityResponse(AddressValidationResult.InvalidTagFormat);
-            // }
-            //
-            // var isAddressFormatValid = ...;
-            //
-            // return !isAddressFormatValid
-            //     ? new AddressValidityResponse(AddressValidationResult.InvalidAddressFormat)
-            //     : new AddressValidityResponse(AddressValidationResult.Valid);
+            // address must not be empty
+            if (string.IsNullOrEmpty(address))
+            {
+                throw new RequestValidationException("Invalid address, must be non empty", nameof(address));
+            }
 
+            // address must be a valid Ripple address
+            if (!AddressCodec.IsValidAddress(address))
+            {
+                return new AddressValidityResponse(AddressValidationResult.InvalidAddressFormat);
+            }
 
-            throw new NotImplementedException();
+            // if specified, tag must be unsigned integer string
+            var tagInvalid = !string.IsNullOrEmpty(tag) && !uint.TryParse(tag, out var _);
+
+            if (tagType != null &&
+                tagType != AddressTagType.Number ||
+                tagInvalid)
+            {
+                return new AddressValidityResponse(AddressValidationResult.InvalidTagFormat);
+            }
+
+            // account must exist
+            var accountInfoResponse = await _rippleApi.Post(new AccountInfoRequest(address));
+
+            if (accountInfoResponse.Result.Error == "actNotFound")
+            {
+                return new AddressValidityResponse(AddressValidationResult.AddressNotFound);
+            }
+
+            // tag may be required
+            if (accountInfoResponse.Result.AccountData.IsDestinationTagRequired &&
+                string.IsNullOrEmpty(tag))
+            {
+                return new AddressValidityResponse(AddressValidationResult.RequiredTagMissed);
+            }
+
+            return new AddressValidityResponse(AddressValidationResult.Valid);
         }
     }
 }

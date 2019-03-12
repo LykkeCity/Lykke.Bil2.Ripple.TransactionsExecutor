@@ -1,20 +1,18 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Lykke.Bil2.Contract.Common;
 using Lykke.Bil2.Contract.TransactionsExecutor.Requests;
 using Lykke.Bil2.Contract.TransactionsExecutor.Responses;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {
-    public class TransactionEstimator : ITransactionEstimator
+    public class TransferAmountTransactionsEstimator : ITransferAmountTransactionsEstimator
     {
-        public TransactionEstimator(/* TODO: Provide specific settings, if necessary */)
+        public TransferAmountTransactionsEstimator(/* TODO: Provide specific settings and dependencies, if necessary */)
         {
         }
 
-        public async Task<EstimateSendingTransactionResponse> EstimateSendingAsync(EstimateSendingTransactionRequest request)
+        public async Task<EstimateTransactionResponse> EstimateTransferAmountAsync(EstimateTransferAmountTransactionRequest request)
         {
             // TODO: estimate transaction fees.
             //
@@ -40,9 +38,10 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
             // (
             //     new Dictionary<AssetId, CoinsAmount>
             //     {
-            //         { request.Inputs.Single().AssetId, CoinsAmount.FromDecimal(fee, accuracy: 6) }
+            //         { "BTC", CoinsAmount.FromDecimal(fee, accuracy: 8) }
             //     }
             // );
+
 
             throw new System.NotImplementedException();
         }

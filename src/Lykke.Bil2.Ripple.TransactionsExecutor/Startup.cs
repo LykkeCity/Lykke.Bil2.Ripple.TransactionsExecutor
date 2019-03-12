@@ -26,10 +26,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                 // Register required service implementations:
 
                 options.AddressValidatorFactory = ctx =>
-                    new AddressValidator
-                    (
-                        /* TODO: Provide specific settings and dependencies, if necessary */
-                    );
+                    new AddressValidator(ctx.Services.GetRequiredService<IRippleApi>());
 
                 options.HealthProviderFactory = ctx =>
                     new HealthProvider
@@ -43,30 +40,41 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                         /* TODO: Provide specific settings and dependencies, if necessary */
                     );
 
-                options.TransactionEstimatorFactory = ctx =>
-                    new TransactionEstimator
+                options.TransactionBroadcasterFactory = ctx =>
+                    new TransactionBroadcaster
                     (
                         /* TODO: Provide specific settings and dependencies, if necessary */
                     );
 
-                options.TransactionExecutorFactory = ctx =>
-                    new TransactionExecutor
+                options.TransactionsStateProviderFactory = ctx =>
+                    new TransactionsStateProvider
                     (
                         /* TODO: Provide specific settings and dependencies, if necessary */
                     );
+
+                options.TransferAmountTransactionsBuilderFactory = ctx =>
+                    new TransferAmountTransactionsBuilder
+                    (
+                        /* TODO: Provide specific settings and dependencies, if necessary */
+                    );
+
+                options.TransferAmountTransactionsEstimatorFactory = ctx =>
+                    new TransferAmountTransactionsEstimator
+                    (
+                        /* TODO: Provide specific settings and dependencies, if necessary */
+                    );
+
 
                 // Register additional services
 
-                options.UseSettings = settings =>
+                options.UseSettings = (serviceCollection, settings) =>
                 {
-                    services.AddRippleClient
+                    serviceCollection.AddRippleClient
                     (
                         settings.CurrentValue.NodeUrl,
                         settings.CurrentValue.NodeRpcUsername,
                         settings.CurrentValue.NodeRpcPassword
                     );
-
-                    //services.AddSingleton<IService>(new ServiceImpl(settings.CurrentValue.ServiceSettingValue));
                 };
             });
         }
