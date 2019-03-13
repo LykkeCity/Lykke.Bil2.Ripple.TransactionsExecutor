@@ -1,39 +1,77 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Common.Log;
 using Lykke.Bil2.Contract.TransactionsExecutor.Responses;
+using Lykke.Bil2.Ripple.Client;
+using Lykke.Bil2.Ripple.Client.Api.ServerState;
+using Lykke.Bil2.Sdk.Exceptions;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Models;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
+using Lykke.Common.Log;
+using Newtonsoft.Json;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {
     public class IntegrationInfoService : IIntegrationInfoService
     {
-        public IntegrationInfoService(/* TODO: Provide specific settings and dependencies, if necessary */)
+        private readonly IRippleApi _rippleApi;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILog _log;
+
+        public IntegrationInfoService(IRippleApi rippleApi, IHttpClientFactory httpClientFactory, ILogFactory logFactory)
         {
+            _rippleApi = rippleApi;
+            _httpClientFactory = httpClientFactory;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task<IntegrationInfo> GetInfoAsync()
         {
-            // TODO: Provide current blockchain state (last confirmed block number and time).
-            //
-            // If possible, return current and available new version (if any) of all components, of which current service is dependent.
-            // For Example:
-            //
-            // var info = ...;
-            // var nodeAvailableVersion = ...;
-            //
-            // return new IntegrationInfo
-            // (
-            //     new BlockchainInfo(info.LastIrreversibleBlockNumber, info.LastIrreversibleBlockTime),
-            //     new Dictionary<string, DependencyInfo>
-            //     {
-            //         { "node", new DependencyInfo(new Version(info.CurrentVersion), new Version(nodeAvailableVersion)) }
-            //     }
-            // );
+            var serverStateResponse = await _rippleApi.Post(new ServerStateRequest());
 
+            serverStateResponse.Result.ThrowIfError();
 
-            throw new System.NotImplementedException();
+            if (serverStateResponse.Result.State.ValidatedLedger == null)
+            {
+                throw new BlockchainIntegrationException(
+                    $"Node didn't return last validated ledger, please, retry. Node state: {serverStateResponse.Result.State.ServerState}");
+            }
+
+            Version.TryParse(serverStateResponse.Result.State.BuildVersion.Split('-').First(), out var currentVersion);
+
+            Version latestVersion = null;
+
+            try
+            {
+                var latestRelease = await _httpClientFactory.CreateClient(Startup.GitHubRepositoryClient).GetAsync("releases/latest");
+
+                if (latestRelease.IsSuccessStatusCode)
+                {
+                    dynamic json = JsonConvert.DeserializeObject(await latestRelease.Content.ReadAsStringAsync());
+                    Version.TryParse(((string)json.tag_name).Split('-').First(), out latestVersion);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Warning("Failed to get latest release version", ex);
+            }
+
+            return new IntegrationInfo
+            (
+                new BlockchainInfo
+                (
+                    serverStateResponse.Result.State.ValidatedLedger.Seq,
+                    serverStateResponse.Result.State.ValidatedLedger.CloseTime.FromRippleEpoch()
+                ),
+                new Dictionary<string, DependencyInfo>
+                {
+                    ["node"] = new DependencyInfo(currentVersion, latestVersion)
+                }
+            );
         }
     }
 }

@@ -57,6 +57,8 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
                 return new AddressValidityResponse(AddressValidationResult.AddressNotFound);
             }
 
+            accountInfoResponse.Result.ThrowIfError();
+
             // tag may be required
             if (accountInfoResponse.Result.AccountData.IsDestinationTagRequired &&
                 string.IsNullOrEmpty(tag))
