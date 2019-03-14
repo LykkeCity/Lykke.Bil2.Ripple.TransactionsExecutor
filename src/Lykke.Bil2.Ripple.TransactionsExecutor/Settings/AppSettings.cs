@@ -20,8 +20,5 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Settings
 
         [Optional]
         public decimal? FeeFactor { get; set; }
-
-        [Optional]
-        public decimal? MaxFee { get; set; }
     }
 }

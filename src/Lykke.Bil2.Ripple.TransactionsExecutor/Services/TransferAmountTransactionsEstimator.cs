@@ -1,3 +1,4 @@
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,11 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
     {
         private readonly IRippleApi _rippleApi;
         private readonly decimal _feeFactor;
-        private readonly decimal _maxFee;
 
-        public TransferAmountTransactionsEstimator(
-            IRippleApi rippleApi,
-            decimal? feeFactor = null,
-            decimal? maxFee = null)
+        public TransferAmountTransactionsEstimator(IRippleApi rippleApi, decimal? feeFactor = null)
         {
             _rippleApi = rippleApi;
             _feeFactor = feeFactor ?? 1.2M;
-            _maxFee = maxFee ?? 2M;
         }
 
         public async Task<EstimateTransactionResponse> EstimateTransferAmountAsync(EstimateTransferAmountTransactionRequest request)
@@ -34,17 +30,11 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 
             serverStateResponse.Result.ThrowIfError();
 
-            var fee = Math.Min
-            (
-                _feeFactor * (serverStateResponse.Result.State.GetFee() / 1_000_000M),
-                _maxFee
-            );
-
             return new EstimateTransactionResponse
             (
                 new Dictionary<AssetId, UMoney>
                 {
-                    ["XRP"] = UMoney.Create(fee, 6)
+                    ["XRP"] = new UMoney(new BigInteger(serverStateResponse.Result.State.GetFee() * _feeFactor), 6)
                 }
             );
         }

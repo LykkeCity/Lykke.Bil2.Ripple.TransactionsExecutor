@@ -72,21 +72,5 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
 
             Assert.AreEqual(UMoney.Create(0.000015M), response.EstimatedFee["XRP"]);
         }
-
-        [Test]
-        public async Task ShouldEstimateTransaction_WithMax()
-        {
-            // Arrange
-
-            _transferAmountTransactionsEstimator = new TransferAmountTransactionsEstimator(_rippleApi.Object, maxFee: 0.000005M);
-
-            // Act
-
-            var response = await _transferAmountTransactionsEstimator.EstimateTransferAmountAsync(null);
-
-            // Assert
-
-            Assert.AreEqual(UMoney.Create(0.000005M), response.EstimatedFee["XRP"]);
-        }
     }
 }
