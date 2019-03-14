@@ -17,5 +17,11 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Settings
         [Optional]
         [SecureSettings]
         public string NodeRpcPassword { get; set; }
+
+        [Optional]
+        public decimal? FeeFactor { get; set; }
+
+        [Optional]
+        public decimal? MaxFee { get; set; }
     }
 }

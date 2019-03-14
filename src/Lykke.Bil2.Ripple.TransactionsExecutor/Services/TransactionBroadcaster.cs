@@ -1,13 +1,17 @@
 using System.Threading.Tasks;
 using Lykke.Bil2.Contract.TransactionsExecutor.Requests;
+using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {
     public class TransactionBroadcaster : ITransactionBroadcaster
     {
-        public TransactionBroadcaster(/* TODO: Provide specific settings and dependencies, if necessary */)
+        private readonly IRippleApi _rippleApi;
+        
+        public TransactionBroadcaster(IRippleApi rippleApi)
         {
+            _rippleApi = rippleApi;
         }
 
         public async Task BroadcastAsync(BroadcastTransactionRequest request)

@@ -51,13 +51,13 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                 options.TransactionBroadcasterFactory = ctx =>
                     new TransactionBroadcaster
                     (
-                        /* TODO: Provide specific settings and dependencies, if necessary */
+                        ctx.Services.GetRequiredService<IRippleApi>()
                     );
 
                 options.TransactionsStateProviderFactory = ctx =>
                     new TransactionsStateProvider
                     (
-                        /* TODO: Provide specific settings and dependencies, if necessary */
+                        ctx.Services.GetRequiredService<IRippleApi>()
                     );
 
                 options.TransferAmountTransactionsBuilderFactory = ctx =>
@@ -69,9 +69,10 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                 options.TransferAmountTransactionsEstimatorFactory = ctx =>
                     new TransferAmountTransactionsEstimator
                     (
-                        /* TODO: Provide specific settings and dependencies, if necessary */
+                        ctx.Services.GetRequiredService<IRippleApi>(),
+                        ctx.Settings.CurrentValue.FeeFactor,
+                        ctx.Settings.CurrentValue.MaxFee
                     );
-
 
                 // Register additional services
 
