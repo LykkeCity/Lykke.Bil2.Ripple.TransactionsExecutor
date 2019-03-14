@@ -17,7 +17,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
     public class Startup
     {
         public const string IntegrationName = "Ripple";
-        public const string GitHubRepositoryClient = "RippleGitHubRepository";
+        public const string RippleGitHubRepository = "RippleGitHubRepository";
 
         [UsedImplicitly]
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -84,7 +84,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                         settings.CurrentValue.NodeRpcPassword
                     );
 
-                    serviceCollection.AddHttpClient(GitHubRepositoryClient)
+                    serviceCollection.AddHttpClient(RippleGitHubRepository)
                         .ConfigureHttpClient(client =>
                         {
                             client.BaseAddress = new Uri("https://api.github.com/repos/ripple/rippled");

@@ -47,7 +47,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 
             try
             {
-                var latestRelease = await _httpClientFactory.CreateClient(Startup.GitHubRepositoryClient).GetAsync("releases/latest");
+                var latestRelease = await _httpClientFactory.CreateClient(Startup.RippleGitHubRepository).GetAsync("releases/latest");
 
                 if (latestRelease.IsSuccessStatusCode)
                 {
