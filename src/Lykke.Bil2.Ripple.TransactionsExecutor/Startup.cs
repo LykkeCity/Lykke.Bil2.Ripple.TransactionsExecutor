@@ -64,7 +64,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                 options.TransferAmountTransactionsBuilderFactory = ctx =>
                     new TransferAmountTransactionsBuilder
                     (
-                        /* TODO: Provide specific settings and dependencies, if necessary */
+                        ctx.Services.GetRequiredService<IRippleApi>()
                     );
 
                 options.TransferAmountTransactionsEstimatorFactory = ctx =>
