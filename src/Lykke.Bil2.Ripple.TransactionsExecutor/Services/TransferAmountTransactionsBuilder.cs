@@ -28,11 +28,13 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
         public async Task<BuildTransactionResponse> BuildTransferAmountAsync(BuildTransferAmountTransactionRequest request)
         {
             if (request.Transfers.Count != 1)
-            {
                 throw new RequestValidationException("Invalid transfers count, must be exactly 1");
-            }
+
+            if (request.Fees.Count != 1)
+                throw new RequestValidationException("Invalid fees count, must be exactly 1");
 
             var transfer = request.Transfers.First();
+            var fee = request.Fees.First();
             var tag = (uint?)null;
 
             if (transfer.DestinationAddressTag != null)
@@ -42,7 +44,12 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
                     : value;
             }
 
-            object amount = transfer.AssetId == "XRP"
+            if (fee.Asset.Id != "XRP")
+            {
+                throw new RequestValidationException("Invalid fee asset, must be XRP");
+            }
+
+            object amount = transfer.Asset.Id == "XRP"
                 ? await CheckXrpBalance(transfer)
                 : await CheckIssuedCurrencyBalance(transfer);
 
@@ -54,7 +61,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
                     Amount = amount,
                     Destination = transfer.DestinationAddress,
                     DestinationTag = tag,
-                    Fee = UMoney.Round(request.Fee.FirstOrDefault().Value, 6),
+                    Fee = UMoney.Denominate(fee.Amount, 6).Significand.ToString(),
                     Flags = 0x80000000,
                     LastLedgerSequence = request.Expiration?.AfterBlockNumber,
                     Sequence = transfer.SourceAddressNonce,
@@ -77,19 +84,19 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
             sourceAccountLinesResponse.Result.ThrowIfError();
 
             var line = sourceAccountLinesResponse.Result.Lines
-                .FirstOrDefault(x => x.Currency == transfer.Asset.AssetId && x.Account == transfer.Asset.IssuerId);
+                .FirstOrDefault(x => x.Currency == transfer.Asset.Id && x.Account == transfer.Asset.Address);
 
             if (line == null ||
-                Money.Create(decimal.Parse(line.Balance), 6) < transfer.Amount)
+                Money.Create(decimal.Parse(line.Balance)) < transfer.Amount)
             {
                 throw new TransactionBuildingException(TransactionBuildingError.NotEnoughBalance, "Not enough balance");
             }
 
             return new
             {
-                currency = transfer.Asset.AssetId,
-                issuer = transfer.Asset.IssuerId,
-                value = transfer.Amount.ToString()
+                currency = transfer.Asset.Id,
+                issuer = transfer.Asset.Address,
+                value = transfer.Amount
             };
         }
 
@@ -111,8 +118,8 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
                 throw new TransactionBuildingException(TransactionBuildingError.NotEnoughBalance, "Not enough balance");
             }
 
-            // TODO: correct amount format
-            return transfer.Amount.ToString(); ;
+            // XRP must be in drops, as integer string
+            return UMoney.Denominate(transfer.Amount, 6).Significand.ToString();
         }
     }
 }

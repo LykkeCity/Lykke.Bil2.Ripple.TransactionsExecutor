@@ -4,6 +4,7 @@ using Lykke.Bil2.Contract.Common;
 using Lykke.Bil2.Contract.Common.Exceptions;
 using Lykke.Bil2.Contract.TransactionsExecutor;
 using Lykke.Bil2.Ripple.Client;
+using Lykke.Bil2.Ripple.Client.Api;
 using Lykke.Bil2.Ripple.Client.Api.AccountInfo;
 using Lykke.Bil2.Ripple.TransactionsExecutor.Services;
 using Moq;
@@ -54,7 +55,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
                     {
                         Result = new AccountInfoResult
                         {
-                            AccountData = new AccountData
+                            AccountData = new AccountRoot
                             {
                                 Account = "rE6jo1LZNZeD3iexQ6DnfCREEWZ9aUweVy",
                                 Balance = "0",

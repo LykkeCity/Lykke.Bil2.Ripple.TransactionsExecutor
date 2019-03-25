@@ -21,7 +21,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
         public TransferAmountTransactionsEstimator(IRippleApi rippleApi, decimal? feeFactor = null)
         {
             _rippleApi = rippleApi;
-            _feeFactor = feeFactor ?? 1.2M;
+            _feeFactor = feeFactor ?? 1.2M; // to be confident fee is enough
         }
 
         public async Task<EstimateTransactionResponse> EstimateTransferAmountAsync(EstimateTransferAmountTransactionRequest request)
@@ -30,13 +30,13 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 
             serverStateResponse.Result.ThrowIfError();
 
-            return new EstimateTransactionResponse
+            var fee = new Fee
             (
-                new Dictionary<AssetId, UMoney>
-                {
-                    ["XRP"] = new UMoney(new BigInteger(serverStateResponse.Result.State.GetFee() * _feeFactor), 6)
-                }
+                new Asset("XRP"),
+                new UMoney(new BigInteger(serverStateResponse.Result.State.GetFee() * _feeFactor), 6)
             );
+
+            return new EstimateTransactionResponse(new [] { fee });
         }
     }
 }

@@ -145,7 +145,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
                             State = new State
                             {
                                 BuildVersion = "1.0.0",
-                                ValidatedLedger = new Ledger
+                                ValidatedLedger = new LedgerState
                                 {
                                     CloseTime = 60,
                                     Seq = 60,
@@ -198,7 +198,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
                             State = new State
                             {
                                 BuildVersion = "1.0.0",
-                                ValidatedLedger = new Ledger
+                                ValidatedLedger = new LedgerState
                                 {
                                     CloseTime = 60,
                                     Seq = 60,
@@ -240,7 +240,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
                             State = new State
                             {
                                 BuildVersion = "1.0.0",
-                                ValidatedLedger = new Ledger
+                                ValidatedLedger = new LedgerState
                                 {
                                     CloseTime = 60,
                                     Seq = 60,

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Bil2.Contract.TransactionsExecutor.Requests;
 using Lykke.Bil2.Ripple.Client;
@@ -30,7 +31,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
                             {
                                 LoadBase = 256,
                                 LoadFactor = 256,
-                                ValidatedLedger = new Ledger
+                                ValidatedLedger = new LedgerState
                                 {
                                     BaseFee = 10,
                                 }
@@ -54,7 +55,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
 
             // Assert
 
-            Assert.AreEqual(UMoney.Create(0.000012M), response.EstimatedFee["XRP"]);
+            Assert.AreEqual(UMoney.Create(0.000012M), response.EstimatedFees.First(x => x.Asset.Id == "XRP").Amount);
         }
 
         [Test]
@@ -70,7 +71,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Tests
 
             // Assert
 
-            Assert.AreEqual(UMoney.Create(0.000015M), response.EstimatedFee["XRP"]);
+            Assert.AreEqual(UMoney.Create(0.000015M), response.EstimatedFees.First(x => x.Asset.Id == "XRP").Amount);
         }
     }
 }

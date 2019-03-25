@@ -35,11 +35,9 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 
             serverStateResponse.Result.ThrowIfError();
 
-            if (serverStateResponse.Result.State.ValidatedLedger == null)
-            {
-                throw new BlockchainIntegrationException(
-                    $"Node didn't return last validated ledger, please, retry. Node state: {serverStateResponse.Result.State.ServerState}");
-            }
+            var lastLedger =
+                serverStateResponse.Result.State.ClosedLedger ??
+                serverStateResponse.Result.State.ValidatedLedger;
 
             Version.TryParse(serverStateResponse.Result.State.BuildVersion.Split('-').First(), out var currentVersion);
 
@@ -62,11 +60,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 
             return new IntegrationInfo
             (
-                new BlockchainInfo
-                (
-                    serverStateResponse.Result.State.ValidatedLedger.Seq,
-                    serverStateResponse.Result.State.ValidatedLedger.CloseTime.FromRippleEpoch()
-                ),
+                new BlockchainInfo(lastLedger.Seq, lastLedger.CloseTime.FromRippleEpoch()),
                 new Dictionary<string, DependencyInfo>
                 {
                     ["node"] = new DependencyInfo(currentVersion, latestVersion)
