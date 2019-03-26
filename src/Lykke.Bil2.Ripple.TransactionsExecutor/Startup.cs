@@ -88,7 +88,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                     serviceCollection.AddHttpClient(RippleGitHubRepository)
                         .ConfigureHttpClient(client =>
                         {
-                            client.BaseAddress = new Uri("https://api.github.com/repos/ripple/rippled");
+                            client.BaseAddress = new Uri("https://api.github.com/repos/ripple/rippled/");
                             client.DefaultRequestHeaders.Add("User-Agent", "Lykke.Bil2.Ripple");
                         });
                 };

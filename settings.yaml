@@ -28,11 +28,15 @@ Db:
             - AzureTableStorage
 NodeUrl:
     settings-key: Ripple-NodeUrl
-NodeRpcUser:
-    settings-key: Ripple-NodeRpcUser
+NodeRpcUsername:
+    settings-key: Ripple-NodeRpcUsername
     types:
         - Optional
 NodeRpcPassword:
     settings-key: Ripple-NodeRpcPassword
+    types:
+        - Optional
+FeeFactor:
+    settings-key: Ripple-TransactionsExecutor-FeeFactor
     types:
         - Optional
