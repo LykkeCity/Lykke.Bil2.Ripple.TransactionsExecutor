@@ -80,7 +80,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                 {
                     serviceCollection.AddRippleClient
                     (
-                        settings.CurrentValue.NodeUrl,
+                        settings.CurrentValue.NodeRpcUrl,
                         settings.CurrentValue.NodeRpcUsername,
                         settings.CurrentValue.NodeRpcPassword
                     );

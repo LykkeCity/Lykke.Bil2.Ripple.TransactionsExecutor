@@ -9,7 +9,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Settings
     /// </summary>
     public class AppSettings : BaseTransactionsExecutorSettings<DbSettings>
     {
-        public string NodeUrl { get; set; }
+        public string NodeRpcUrl { get; set; }
 
         [Optional]
         public string NodeRpcUsername { get; set; }

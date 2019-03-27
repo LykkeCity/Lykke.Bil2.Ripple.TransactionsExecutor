@@ -26,8 +26,9 @@ Db:
         settings-key: Ripple-LogsConnString
         types:
             - AzureTableStorage
-NodeUrl:
-    settings-key: Ripple-NodeUrl
+
+NodeRpcUrl:
+    settings-key: Ripple-NodeRpcUrl
 NodeRpcUsername:
     settings-key: Ripple-NodeRpcUsername
     types:
@@ -36,6 +37,7 @@ NodeRpcPassword:
     settings-key: Ripple-NodeRpcPassword
     types:
         - Optional
+
 FeeFactor:
     settings-key: Ripple-TransactionsExecutor-FeeFactor
     types:
