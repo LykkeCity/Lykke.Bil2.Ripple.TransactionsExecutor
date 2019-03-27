@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Common;
 using Lykke.Bil2.Contract.Common.Exceptions;
 using Lykke.Bil2.Contract.Common.Extensions;
 using Lykke.Bil2.Contract.TransactionsExecutor;
@@ -12,7 +14,6 @@ using Lykke.Bil2.Ripple.Client.Api.AccountLines;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Exceptions;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
 using Lykke.Numerics;
-using Newtonsoft.Json;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {
@@ -53,23 +54,28 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
                 ? await CheckXrpBalance(transfer)
                 : await CheckIssuedCurrencyBalance(transfer);
 
-            var tx = JsonConvert.SerializeObject
-            (
-                new
-                {
-                    Account = transfer.SourceAddress,
-                    Amount = amount,
-                    Destination = transfer.DestinationAddress,
-                    DestinationTag = tag,
-                    Fee = UMoney.Denominate(fee.Amount, 6).Significand.ToString(),
-                    Flags = 0x80000000,
-                    LastLedgerSequence = request.Expiration?.AfterBlockNumber,
-                    Sequence = transfer.SourceAddressNonce,
-                    TransactionType = "Payment",
-                }
-            );
+            var tx = new Dictionary<string, object>
+            {
+                ["Account"] = transfer.SourceAddress,
+                ["Amount"] = amount,
+                ["Destination"] = transfer.DestinationAddress,
+                ["Fee"] = UMoney.Denominate(fee.Amount, 6).Significand.ToString(),
+                ["Flags"] = 0x80000000,
+                ["TransactionType"] = "Payment"
+            };
 
-            return new BuildTransactionResponse(tx.ToBase58());
+            // nullable fields must be either not null or absent at all
+
+            if (transfer.DestinationAddressTag != null)
+                tx["DestinationTag"] = tag;
+
+            if (request.Expiration?.AfterBlockNumber != null)
+                tx["LastLedgerSequence"] = request.Expiration?.AfterBlockNumber;
+
+            if (transfer.SourceAddressNonce != null)
+                tx["Sequence"] = transfer.SourceAddressNonce;
+
+            return new BuildTransactionResponse(tx.ToJson().ToBase58());
         }
 
         private async Task<object> CheckIssuedCurrencyBalance(Transfer transfer)

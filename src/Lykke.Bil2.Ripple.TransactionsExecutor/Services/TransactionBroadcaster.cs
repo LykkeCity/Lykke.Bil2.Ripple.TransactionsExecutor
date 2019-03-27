@@ -42,11 +42,11 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
             if (submitResponse.Result.EngineResult == "tefMAX_LEDGER" ||
                 submitResponse.Result.EngineResult == "tefPAST_SEQ")
             {
-                throw new TransactionBroadcastingException(TransactionBroadcastingError.RebuildRequired, submitResponse.Result.EngineResultMessage);
+                throw new TransactionBroadcastingException(TransactionBroadcastingError.RebuildRequired, submitResponse.Result.EngineResult);
             }
             else if (submitResponse.Result.EngineResult.StartsWith("tem"))
             {
-                throw new RequestValidationException(submitResponse.Result.EngineResultMessage);
+                throw new RequestValidationException(submitResponse.Result.EngineResult);
             }
         }
     }
