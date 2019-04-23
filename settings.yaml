@@ -17,6 +17,10 @@ SlackNotifications:
 
 HealthMonitoringPeriod:
     settings-key: Ripple-TransactionsExecutor-HealthMonitoringPeriod
+
+DependenciesInfoCacheExpirationPeriod:
+    settings-key: Bcn-TransactionsExecutor-DependenciesInfoCacheExpirationPeriod
+
 Db:
     AzureDataConnString:
         settings-key: Ripple-AzureDataConnString
