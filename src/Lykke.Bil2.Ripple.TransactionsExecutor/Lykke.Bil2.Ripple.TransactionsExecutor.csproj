@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="Lykke.Bil2.Ripple.Client" Version="1.0.0-beta.15" />
-    <PackageReference Include="Lykke.Bil2.Sdk.TransactionsExecutor" Version="1.0.0-beta.13" />
+    <PackageReference Include="Lykke.Bil2.Sdk.TransactionsExecutor" Version="1.0.0-beta.19" />
     <PackageReference Include="Ripple.NetCore" Version="1.1.0" />
   </ItemGroup>
 

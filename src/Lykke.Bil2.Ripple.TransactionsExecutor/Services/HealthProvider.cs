@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Ripple.Client.Api.ServerState;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
-using Lykke.Common;
 using Refit;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services

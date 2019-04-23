@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Common;
 using Lykke.Bil2.Contract.Common.Exceptions;
 using Lykke.Bil2.Contract.Common.Extensions;
-using Lykke.Bil2.Contract.TransactionsExecutor;
 using Lykke.Bil2.Contract.TransactionsExecutor.Requests;
 using Lykke.Bil2.Contract.TransactionsExecutor.Responses;
 using Lykke.Bil2.Ripple.Client;
@@ -13,6 +12,7 @@ using Lykke.Bil2.Ripple.Client.Api.AccountInfo;
 using Lykke.Bil2.Ripple.Client.Api.AccountLines;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Exceptions;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
+using Lykke.Bil2.SharedDomain;
 using Lykke.Numerics;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services

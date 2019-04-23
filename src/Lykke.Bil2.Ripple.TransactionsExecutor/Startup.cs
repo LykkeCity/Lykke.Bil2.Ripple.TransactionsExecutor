@@ -1,7 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using JetBrains.Annotations;
 using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Ripple.TransactionsExecutor.Services;
@@ -40,12 +38,17 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
                         ctx.Services.GetRequiredService<IRippleApi>()
                     );
 
-                options.IntegrationInfoServiceFactory = ctx =>
-                    new IntegrationInfoService
+                options.BlockchainInfoProviderFactory = ctx =>
+                    new BlockchainInfoProvider
+                    (
+                        ctx.Services.GetRequiredService<IRippleApi>()
+                    );
+
+                options.DependenciesInfoProviderFactory = ctx =>
+                    new DependenciesInfoProvider
                     (
                         ctx.Services.GetRequiredService<IRippleApi>(),
-                        ctx.Services.GetRequiredService<IHttpClientFactory>(),
-                        ctx.Services.GetRequiredService<ILogFactory>()
+                        ctx.Services.GetRequiredService<IHttpClientFactory>()
                     );
 
                 options.TransactionBroadcasterFactory = ctx =>

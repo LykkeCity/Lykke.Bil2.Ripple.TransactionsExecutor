@@ -3,6 +3,7 @@ using Lykke.Bil2.Contract.TransactionsExecutor;
 using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Ripple.Client.Api.Tx;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
+using Lykke.Bil2.SharedDomain;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {

@@ -1,15 +1,12 @@
 using System.Numerics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Lykke.Bil2.Contract.Common;
 using Lykke.Bil2.Contract.TransactionsExecutor.Requests;
 using Lykke.Bil2.Contract.TransactionsExecutor.Responses;
 using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Ripple.Client.Api.ServerState;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
 using Lykke.Numerics;
+using Lykke.Bil2.SharedDomain;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services
 {

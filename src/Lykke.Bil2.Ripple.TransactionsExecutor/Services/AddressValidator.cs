@@ -1,14 +1,10 @@
-using System;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-using Lykke.Bil2.Contract.Common;
 using Lykke.Bil2.Contract.Common.Exceptions;
-using Lykke.Bil2.Contract.TransactionsExecutor;
 using Lykke.Bil2.Contract.TransactionsExecutor.Responses;
 using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Ripple.Client.Api.AccountInfo;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
+using Lykke.Bil2.SharedDomain;
 using Ripple.Address;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services

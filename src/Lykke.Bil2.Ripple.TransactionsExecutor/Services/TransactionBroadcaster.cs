@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Bil2.Contract.Common.Exceptions;
-using Lykke.Bil2.Contract.TransactionsExecutor;
 using Lykke.Bil2.Contract.TransactionsExecutor.Requests;
 using Lykke.Bil2.Ripple.Client;
 using Lykke.Bil2.Ripple.Client.Api.Submit;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Exceptions;
 using Lykke.Bil2.Sdk.TransactionsExecutor.Services;
+using Lykke.Bil2.SharedDomain;
 using Lykke.Common.Log;
 
 namespace Lykke.Bil2.Ripple.TransactionsExecutor.Services

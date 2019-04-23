@@ -10,7 +10,7 @@ namespace Lykke.Bil2.Ripple.TransactionsExecutor
         static async Task Main(string[] args)
         {
 #if DEBUG
-            await LykkeStarter.Start<Startup>(true);
+            await LykkeStarter.Start<Startup>(true, 5001);
 #else
             await LykkeStarter.Start<Startup>(false);
 #endif
